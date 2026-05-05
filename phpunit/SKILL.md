@@ -1,52 +1,81 @@
 ---
 name: phpunit
 description: Expert guidance for writing, running, and maintaining PHPUnit tests. Use this skill when creating new tests, refactoring existing ones, or troubleshooting test failures in PHP projects.
+model: inherit
 ---
 
-# PHPUnit Skill
+# PHPUnit Best Practices
 
-## Overview
+Procedural knowledge and patterns for effective PHP testing using PHPUnit. Emphasizes strict typing, AAA pattern, and modern isolation techniques.
 
-This skill provides procedural knowledge for effective PHP testing using PHPUnit. It emphasizes strict type checking, efficient test data management, and modern AI-assisted testing patterns.
+## Specialized Agents
+
+Specialized personas for PHP testing. Load these from `agents/` to provide expert context.
+
+| Agent | Role | Focus |
+|-------|------|-------|
+| **phpunit-pro** | Testing Expert | AAA pattern, mocking strategies, isolation, AI testing. |
+
+## When to Use
+
+- Creating new unit, integration, or feature tests
+- Refactoring existing test suites for better performance or isolation
+- Troubleshooting failing tests or flaky test suites
+- Implementing complex mocking/stubbing logic
+- Setting up CI/CD test pipelines
+- Testing AI-driven or probabilistic outputs
 
 ## Core Workflow
 
-1. **Analysis**: Identify the System Under Test (SUT) and its dependencies. List all logical paths, boundary conditions, and potential failure states.
-2. **Setup**: Use `createStub()` for simple return values and `createMock()` only when interaction verification is needed. Prefer private factory methods over `setUp()` for better isolation and performance.
-3. **Implementation**: Use the AAA (Arrange, Act, Assert) pattern. Favor `assertSame()` for all equality checks.
-4. **Data Management**: Use `#[DataProvider]` for multi-scenario testing to keep test methods clean and focused.
-5. **Validation**: Run the tests and ensure they pass. For AI-driven features, use statistical thresholds or LLM-as-judge patterns.
+1. **Analysis**: Identify the System Under Test (SUT) and its dependencies.
+2. **Setup**: Use `createStub()` for simple values; `createMock()` for interaction verification.
+3. **Implementation**: Follow the **AAA (Arrange, Act, Assert)** pattern.
+4. **Data Management**: Use `#[DataProvider]` for multi-scenario testing.
+5. **Validation**: Run tests and ensure 0 failures and high coverage.
 
-## Best Practices
+## Core Directives
 
-- **Strictness**: Always use `assertSame()` to avoid type coercion bugs.
-- **Naming**: Use descriptive snake_case names: `test_it_does_something_when_condition_is_met`.
-- **Isolation**: Each test MUST be independent. Never rely on the state from a previous test.
-- **Speed**: Keep tests fast. Mock slow dependencies like databases or external APIs.
+### MUST DO
 
-## Resources
+- Follow the **AAA (Arrange, Act, Assert)** pattern in every test method
+- Use `assertSame()` for all equality checks to avoid type coercion issues
+- Use descriptive, snake_case names (e.g., `test_it_calculates_total_with_tax`)
+- Ensure every test is **Isolated**: never rely on the state from a previous test
+- Use `#[DataProvider]` for tests that require multiple input scenarios
+- Mock slow or external dependencies (Databases, APIs) for unit tests
+- Declare return types (`void`) for all test methods
 
-- **[best_practices.md](references/best_practices.md)**: Detailed coding standards and structural guidelines.
-- **[common_assertions.md](references/common_assertions.md)**: Quick reference for frequently used PHPUnit assertions.
-- **[ai_testing.md](references/ai_testing.md)**: Specialized patterns for testing AI agents and probabilistic outputs.
+### MUST NOT DO
 
-## Example: Creating a Test
+- Use `assertEquals()` when `assertSame()` is possible (type safety)
+- Perform multiple unrelated assertions in a single test method
+- Use `setUp()` for complex object creation (prefer private factory methods)
+- Rely on real external APIs or network connectivity during testing
+- Commit tests that rely on local environment variables or specific paths
+- Suppress errors or exceptions during the Act phase
 
-```php
-use PHPUnit\Framework\TestCase;
+## Category Index — When to Load Which Reference
 
-class CalculatorTest extends TestCase
-{
-    public function test_it_adds_two_numbers(): void
-    {
-        // Arrange
-        $calculator = new Calculator();
+| # | Category | Impact | Load when… | Reference |
+|--:|----------|:------:|------------|-----------|
+| 1 | Coding Standards | HIGH | Designing test structure, naming, and organization | [`references/best_practices.md`](references/best_practices.md) |
+| 2 | Common Assertions | HIGH | Choosing the right assertion for the task | [`references/common_assertions.md`](references/common_assertions.md) |
+| 3 | AI & Probabilistic | MEDIUM | Testing LLM outputs or non-deterministic logic | [`references/ai_testing.md`](references/ai_testing.md) |
 
-        // Act
-        $result = $calculator->add(2, 3);
+## Validation Checklist
 
-        // Assert
-        $this->assertSame(5, $result);
-    }
-}
-```
+- [ ] Every test follows the AAA (Arrange, Act, Assert) structure
+- [ ] `assertSame()` is used instead of `assertEquals()` where applicable
+- [ ] Test names clearly describe the scenario and expected outcome
+- [ ] Tests are fully isolated and do not share state
+- [ ] Data providers are used for multi-scenario validation
+- [ ] All slow/external dependencies are correctly mocked or stubbed
+- [ ] Return types are explicitly declared for all test methods
+- [ ] Tests pass consistently in a clean environment
+
+## External References
+
+- [PHPUnit Documentation](https://phpunit.de/documentation.html)
+- [Testing in Laravel](https://laravel.com/docs/testing)
+- [Pest PHP (Alternative Runner)](https://pestphp.com)
+- [Mockery (Alternative Mocking)](http://docs.mockery.io)
