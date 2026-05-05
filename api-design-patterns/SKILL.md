@@ -1,17 +1,20 @@
 ---
 name: api-design-patterns
 description: RESTful API design, error handling, versioning, security, pagination, response format, and documentation. Use when designing new APIs, reviewing endpoints, implementing error responses, choosing pagination / versioning strategies, or setting up API security and docs. Triggers on "design API", "review API", "REST best practices", "API patterns".
-license: MIT
-metadata:
-  author: agent-skills
-  version: "3.0.0"
-  ruleCount: 38
-  categoryCount: 7
+model: inherit
 ---
 
 # API Design Patterns
 
 RESTful API design principles for consistent, developer-friendly APIs. 38 rules across 7 categories, each rule with bad / good examples in `rules/`. Per-category guides live in `references/`.
+
+## Specialized Agents
+
+Specialized personas for different API design roles. Load these from `agents/` to provide expert context.
+
+| Agent | Role | Focus |
+|-------|------|-------|
+| **api-design-pro** | API Architect | Resource design, REST/GraphQL/gRPC patterns, versioning, security. |
 
 ## When to Use
 
@@ -42,10 +45,28 @@ DELETE /users/123      # delete     → 204 No Content
 # Auth ← sec-authentication + sec-https-only
 Authorization: Bearer <jwt>
 Strict-Transport-Security: max-age=31536000; includeSubDomains
-
-# Rate limit ← sec-rate-limiting
-X-RateLimit-Limit: 1000 / X-RateLimit-Remaining: 998 / X-RateLimit-Reset: 1640995200
 ```
+
+## Core Directives
+
+### MUST DO
+
+- Use plural nouns for resources (e.g., `/users`, not `/user`)
+- Follow standard HTTP methods (GET, POST, PUT, PATCH, DELETE)
+- Implement consistent error envelopes with structured error codes and `request_id`
+- Use cursor-based pagination for large, dynamic datasets
+- Version APIs via URL path (e.g., `/v1/`) or headers
+- Always use HTTPS and implement proper rate limiting
+- Provide machine-readable documentation (OpenAPI/Swagger)
+
+### MUST NOT DO
+
+- Use verbs in URI paths (e.g., `/getUser`, `/createOrder`)
+- Return 200 OK for errors or 404 for empty lists (return 200 with empty array)
+- Expose internal stack traces in error responses
+- Perform destructive operations via GET requests
+- Use sequential IDs in public URLs (prefer UUIDs/ULIDs)
+- Store sensitive data (keys, tokens) in plain text or log them
 
 ## Category Index — When to Load Which Reference
 
@@ -59,41 +80,39 @@ X-RateLimit-Limit: 1000 / X-RateLimit-Remaining: 998 / X-RateLimit-Reset: 164099
 | 6 | Response Format | MEDIUM | Picking envelope, casing, sparse fields, compression | [`references/response-format.md`](references/response-format.md) | `resp-` | 4 |
 | 7 | Documentation | MEDIUM | OpenAPI spec, examples, changelog | [`references/documentation.md`](references/documentation.md) | `doc-` | 3 |
 
-Load only the reference(s) relevant to the current task — don't pull all seven.
-
 ## Rule Index — Direct Jumps
 
-Each `rules/<name>.md` file has YAML frontmatter (title, impact, tags) and a bad/good example pair.
-
-### Resource Design (`rest-`) — CRITICAL
+### 1. Resource Design (`rest-`) — CRITICAL
 `rest-nouns-not-verbs` · `rest-plural-resources` · `rest-http-methods` · `rest-nested-resources` · `rest-status-codes` · `rest-idempotency` · `rest-hateoas` · `rest-resource-actions`
 
-### Error Handling (`error-`) — CRITICAL
+### 2. Error Handling (`error-`) — CRITICAL
 `error-consistent-format` · `error-meaningful-messages` · `error-validation-details` · `error-error-codes` · `error-no-stack-traces` · `error-request-id`
 
-### Security (`sec-`) — CRITICAL
+### 3. Security (`sec-`) — CRITICAL
 `sec-authentication` · `sec-authorization` · `sec-rate-limiting` · `sec-input-validation` · `sec-cors-config` · `sec-https-only` · `sec-sensitive-data`
 
-### Pagination & Filtering (`page-` / `filter-` / `sort-`) — HIGH
+### 4. Pagination & Filtering (`page-` / `filter-` / `sort-`) — HIGH
 `page-cursor-based` · `page-offset-based` · `page-consistent-params` · `page-metadata` · `filter-query-params` · `sort-flexible`
 
-### Versioning (`ver-`) — HIGH
+### 5. Versioning (`ver-`) — HIGH
 `ver-url-path` · `ver-header-based` · `ver-backward-compatible` · `ver-deprecation`
 
-### Response Format (`resp-`) — MEDIUM
+### 6. Response Format (`resp-`) — MEDIUM
 `resp-consistent-structure` · `resp-json-conventions` · `resp-partial-responses` · `resp-compression`
 
-### Documentation (`doc-`) — MEDIUM
+### 7. Documentation (`doc-`) — MEDIUM
 `doc-openapi` · `doc-examples` · `doc-changelog`
 
-## How to Read a Rule File
+## Validation Checklist
 
-Each `rules/<name>.md`:
-- **Frontmatter** — `title`, `impact`, `impactDescription`, `tags`
-- **Why it matters** — short rationale
-- **Incorrect** — bad example with the problem called out
-- **Correct** — good example with the benefit explained
-- **Context** — language-specific notes and spec references
+- [ ] All resource paths use plural nouns and no verbs
+- [ ] Correct HTTP methods are used for all actions (e.g., DELETE for removal)
+- [ ] Error responses follow the standard envelope with a `request_id`
+- [ ] Authentication is required for all non-public endpoints
+- [ ] Rate limiting is configured and headers are present
+- [ ] Pagination is implemented for all list endpoints
+- [ ] API is versioned (URL or Header)
+- [ ] OpenAPI specification is up to date and reflects all changes
 
 ## External References
 
