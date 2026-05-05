@@ -1,14 +1,7 @@
 ---
 name: microservices
 description: Microservices architecture patterns for PHP (Laravel/Symfony) and TypeScript (NestJS/Express) — service decomposition, DDD bounded contexts, sync/async communication, saga and event sourcing, resilience (circuit breaker, retry, bulkhead, timeout), observability (correlation IDs, distributed tracing, SLO), deployment (health probes, graceful shutdown), API gateway, and service mesh. Use when decomposing monoliths, designing new distributed systems, reviewing service boundaries, implementing inter-service communication, or hardening an existing microservice.
-license: MIT
-metadata:
-  author: consolidated (Jeffallan/microservices-architect, VoltAgent/microservices-architect, wshobson/microservices-patterns)
-  version: "1.0.0"
-  languages: [PHP 8.3+, TypeScript 5.x]
-  frameworks: [Laravel 13, Symfony 7, NestJS 10, Express 4]
-  ruleCount: 29
-  categoryCount: 7
+model: inherit
 ---
 
 # Microservices
@@ -64,6 +57,14 @@ Deploy    ─── config via env / secret ────────►  rebuild
 - Log secrets, tokens, JWTs, or full request bodies — redact first
 - Couple services to each other's deployment cadence (synchronous deploy dependencies)
 - Put business logic in the API gateway — it routes, auths, and rate-limits, nothing more
+
+## Specialized Agents
+
+Specialized personas for microservices architecture. Load these from `agents/` to provide expert context.
+
+| Agent | Role | Focus |
+|-------|------|-------|
+| **microservices-pro** | Architecture Expert | Service boundaries, Saga/CQRS, resilience, observability. |
 
 ## Category Index — When to Load Which Reference
 
