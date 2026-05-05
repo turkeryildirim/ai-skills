@@ -1,47 +1,22 @@
 ---
 name: php
 description: PHP 8.x modern patterns, PSR standards, and SOLID principles. Use when reviewing PHP code, checking type safety, auditing code quality, or ensuring PHP best practices. Triggers on "review PHP", "check PHP code", "audit PHP", or "PHP best practices".
-license: MIT
-metadata:
-  author: php-community
-  version: "2.1.0"
-  phpVersion: "8.0 - 8.5"
+model: inherit
 ---
 
 # PHP Best Practices
 
 Modern PHP 8.x patterns, PSR standards, type system best practices, and SOLID principles. Contains 51 rules for writing clean, maintainable PHP code.
 
-## Step 1: Detect PHP Version
+## Specialized Agents
 
-**Always check the project's PHP version before giving any advice.** Features vary significantly across 8.0 - 8.5. Never suggest syntax that doesn't exist in the project's version.
+Specialized personas for PHP development. Load these from `agents/` to provide expert context.
 
-Check `composer.json` for the required PHP version:
-```json
-{ "require": { "php": "^8.1" } }   // -> 8.1 rules and below
-{ "require": { "php": "^8.3" } }   // -> 8.3 rules and below
-{ "require": { "php": ">=8.4" } }  // -> 8.4 rules and below
-```
+| Agent | Role | Focus |
+|-------|------|-------|
+| **php-pro** | PHP Expert | Modern PHP 8.x features, enums, types, performance. |
 
-Also check the runtime version:
-```bash
-php -v   # e.g. PHP 8.3.12
-```
-
-### Feature Availability by Version
-
-| Feature | Version | Rule Prefix |
-|---------|---------|-------------|
-| Union types, match, nullsafe, named args, constructor promotion, attributes | 8.0+ | `type-`, `modern-` |
-| Enums, readonly properties, intersection types, first-class callables, never, fibers | 8.1+ | `modern-` |
-| Readonly classes, DNF types, true/false/null standalone types | 8.2+ | `modern-` |
-| Typed class constants, `#[\Override]`, `json_validate()` | 8.3+ | `modern-` |
-| Property hooks, asymmetric visibility, `#[\Deprecated]`, `new` without parens | 8.4+ | `modern-` |
-| Pipe operator `|>` | 8.5+ | `modern-` |
-
-**Only suggest features available in the detected version.** If the user asks about upgrading or newer features, mention what becomes available at each version.
-
-## When to Apply
+## When to Use
 
 Reference these guidelines when:
 - Writing or reviewing PHP code
@@ -49,198 +24,85 @@ Reference these guidelines when:
 - Using PHP 8.x modern features
 - Ensuring type safety
 - Following PSR standards
-- Applying design patterns
+- Applying design patterns (SOLID)
 
-## Rule Categories by Priority
+## Step 1: Detect PHP Version
 
-| Priority | Category | Impact | Prefix | Rules |
-|----------|----------|--------|--------|-------|
-| 1 | Type System | CRITICAL | `type-` | 9 |
-| 2 | Modern PHP Features | CRITICAL | `modern-` | 16 |
-| 3 | PSR Standards | HIGH | `psr-` | 6 |
-| 4 | SOLID Principles | HIGH | `solid-` | 5 |
-| 5 | Error Handling | HIGH | `error-` | 5 |
-| 6 | Performance | MEDIUM | `perf-` | 5 |
-| 7 | Security | CRITICAL | `sec-` | 5 |
+**Always check the project's PHP version before giving any advice.**
 
-## Quick Reference
-
-### 1. Type System (CRITICAL) — 9 rules
-
-- `type-strict-mode` - Declare strict types in every file
-- `type-return-types` - Always declare return types
-- `type-parameter-types` - Type all parameters
-- `type-property-types` - Type class properties
-- `type-union-types` - Use union types effectively
-- `type-intersection-types` - Use intersection types
-- `type-nullable-types` - Handle nullable types properly
-- `type-void-never` - Use void/never for appropriate return types
-- `type-mixed-avoid` - Avoid mixed type when possible
-
-### 2. Modern PHP Features (CRITICAL) — 16 rules
-
-**8.0+:**
-- `modern-constructor-promotion` - Constructor property promotion
-- `modern-match-expression` - Match over switch
-- `modern-named-arguments` - Named arguments for clarity
-- `modern-nullsafe-operator` - Nullsafe operator (?->)
-- `modern-attributes` - Attributes for metadata
-
-**8.1+:**
-- `modern-enums` - Enums instead of constants
-- `modern-enums-methods` - Enums with methods and interfaces
-- `modern-readonly-properties` - Readonly for immutable data
-- `modern-first-class-callables` - First-class callable syntax
-- `modern-arrow-functions` - Arrow functions (7.4+, pairs well with 8.1 features)
-
-**8.2+:**
-- `modern-readonly-classes` - Readonly classes
-
-**8.3+:**
-- `modern-typed-constants` - Typed class constants (`const string NAME = 'foo'`)
-- `modern-override-attribute` - `#[\Override]` to catch parent method typos
-
-**8.4+:**
-- `modern-property-hooks` - Property hooks replacing getters/setters
-- `modern-asymmetric-visibility` - `public private(set)` for controlled access
-
-**8.5+:**
-- `modern-pipe-operator` - Pipe operator (`|>`) for functional chaining
-
-### 3. PSR Standards (HIGH) — 6 rules
-
-- `psr-4-autoloading` - Follow PSR-4 autoloading
-- `psr-12-coding-style` - Follow PSR-12 coding style
-- `psr-naming-classes` - Class naming conventions
-- `psr-naming-methods` - Method naming conventions
-- `psr-file-structure` - One class per file
-- `psr-namespace-usage` - Proper namespace usage
-
-### 4. SOLID Principles (HIGH) — 5 rules
-
-- `solid-srp` - Single Responsibility: one reason to change
-- `solid-ocp` - Open/Closed: extend, don't modify
-- `solid-lsp` - Liskov Substitution: subtypes must be substitutable
-- `solid-isp` - Interface Segregation: small, focused interfaces
-- `solid-dip` - Dependency Inversion: depend on abstractions
-
-### 5. Error Handling (HIGH) — 5 rules
-
-- `error-custom-exceptions` - Create specific exceptions for different errors
-- `error-exception-hierarchy` - Organize exceptions into meaningful hierarchy
-- `error-try-catch-specific` - Catch specific exceptions, not generic \Exception
-- `error-finally-cleanup` - Use finally for guaranteed resource cleanup
-- `error-never-suppress` - Never use @ error suppression operator
-
-### 6. Performance (MEDIUM) — 5 rules
-
-- `perf-avoid-globals` - Avoid global variables, use dependency injection
-- `perf-lazy-loading` - Defer expensive operations until needed
-- `perf-array-functions` - Use native array functions over manual loops
-- `perf-string-functions` - Use native string functions over regex
-- `perf-generators` - Use generators for large datasets
-
-### 7. Security (CRITICAL) — 5 rules
-
-- `sec-input-validation` - Validate and sanitize all external input
-- `sec-output-escaping` - Escape output based on context (HTML, JS, URL)
-- `sec-password-hashing` - Use password_hash/verify, never MD5/SHA1
-- `sec-sql-prepared` - Use prepared statements for all SQL queries
-- `sec-file-uploads` - Validate file type, size, name; store outside web root
-
-## Essential Guidelines
-
-For detailed examples and explanations, see the rule files:
-
-- [type-strict-mode.md](rules/type-strict-mode.md) - Strict types declaration
-- [modern-constructor-promotion.md](rules/modern-constructor-promotion.md) - Constructor property promotion
-- [modern-enums.md](rules/modern-enums.md) - PHP 8.1+ enums with methods
-- [solid-srp.md](rules/solid-srp.md) - Single responsibility principle
-
-### Key Patterns (Quick Reference)
-
-```php
-<?php
-declare(strict_types=1);
-
-// 8.0+ Constructor promotion + readonly (8.1+)
-class User
-{
-    public function __construct(
-        public readonly string $id,
-        private string $email,
-    ) {}
-}
-
-// 8.1+ Enums with methods
-enum Status: string
-{
-    case Active = 'active';
-    case Inactive = 'inactive';
-
-    public function label(): string
-    {
-        return match($this) {
-            self::Active => 'Active',
-            self::Inactive => 'Inactive',
-        };
-    }
-}
-
-// 8.0+ Match expression
-$result = match($status) {
-    'pending' => 'Waiting',
-    'active' => 'Running',
-    default => 'Unknown',
-};
-
-// 8.0+ Nullsafe operator
-$country = $user?->getAddress()?->getCountry();
-
-// 8.3+ Typed class constants + #[\Override]
-class PaymentService extends BaseService
-{
-    public const string GATEWAY = 'stripe';
-
-    #[\Override]
-    public function process(): void { /* ... */ }
-}
-
-// 8.4+ Property hooks + asymmetric visibility
-class Product
-{
-    public string $name { set => trim($value); }
-    public private(set) float $price;
-}
-
-// 8.5+ Pipe operator
-$result = $input
-    |> trim(...)
-    |> strtolower(...)
-    |> htmlspecialchars(...);
+```bash
+php -v
+```
+Check `composer.json` for the required PHP version:
+```json
+{ "require": { "php": "^8.3" } }
 ```
 
-## Output Format
+### Feature Availability by Version
 
-When auditing code, output findings in this format:
+| Feature | Version | Rule Prefix |
+|---------|---------|-------------|
+| Union types, match, nullsafe, named args, constructor promotion | 8.0+ | `modern-`, `type-` |
+| Enums, readonly properties, intersection types, first-class callables | 8.1+ | `modern-` |
+| Readonly classes, DNF types | 8.2+ | `modern-` |
+| Typed class constants, `#[\Override]` | 8.3+ | `modern-` |
+| Property hooks, asymmetric visibility | 8.4+ | `modern-` |
+| Pipe operator `|>` | 8.5+ | `modern-` |
 
-```
-file:line - [category] Description of issue
-```
+## Core Directives
 
-Example:
-```
-src/Services/UserService.php:15 - [type] Missing return type declaration
-src/Models/Order.php:42 - [modern] Use match expression instead of switch
-src/Controllers/ApiController.php:28 - [solid] Class has multiple responsibilities
-```
+### MUST DO
 
-## How to Use
+- Declare `strict_types=1` in every PHP file
+- Use PHP 8.x features (Constructor Promotion, Match, Enums) wherever possible
+- Always declare parameter and return types explicitly
+- Implement specific Exception classes for different error scenarios
+- Follow PSR-12 coding style and PSR-4 autoloading
+- Use `#[Override]` (PHP 8.3+) when overriding parent methods
+- Leverage Readonly properties/classes for immutable data structures
 
-Read individual rule files for detailed explanations:
+### MUST NOT DO
 
-```
-rules/modern-constructor-promotion.md
-rules/type-strict-mode.md
-rules/solid-srp.md
-```
+- Use the `@` error suppression operator
+- Use `mixed` type when more specific types (union/intersection) are possible
+- Concatenate user input into SQL strings (use prepared statements)
+- Put multiple classes in a single file
+- Rely on global variables (use Dependency Injection)
+- Use MD5 or SHA1 for passwords (use `password_hash`)
+
+## Rule Index
+
+### 1. Type System (`type-`) — CRITICAL
+`type-strict-mode` · `type-return-types` · `type-parameter-types` · `type-property-types` · `type-union-types` · `type-intersection-types` · `type-nullable-types` · `type-void-never` · `type-mixed-avoid`
+
+### 2. Modern PHP Features (`modern-`) — CRITICAL
+**8.0+**: `modern-constructor-promotion` · `modern-match-expression` · `modern-named-arguments` · `modern-nullsafe-operator` · `modern-attributes`
+**8.1+**: `modern-enums` · `modern-enums-methods` · `modern-readonly-properties` · `modern-first-class-callables` · `modern-arrow-functions`
+**8.2+**: `modern-readonly-classes`
+**8.3+**: `modern-typed-constants` · `modern-override-attribute`
+**8.4+**: `modern-property-hooks` · `modern-asymmetric-visibility`
+**8.5+**: `modern-pipe-operator`
+
+### 3. SOLID Principles (`solid-`) — HIGH
+`solid-srp` · `solid-ocp` · `solid-lsp` · `solid-isp` · `solid-dip`
+
+### 4. Error Handling (`error-`) — HIGH
+`error-custom-exceptions` · `error-exception-hierarchy` · `error-try-catch-specific` · `error-finally-cleanup` · `error-never-suppress`
+
+## Validation Checklist
+
+- [ ] `declare(strict_types=1)` is present at the top of all files
+- [ ] All method parameters and return types are explicitly hinted
+- [ ] Modern PHP features (e.g., Match, Enums) are used instead of legacy patterns
+- [ ] Code follows PSR-12 formatting and PSR-4 directory structure
+- [ ] SOLID principles are respected (especially SRP)
+- [ ] Sensitive operations are protected against common vulnerabilities (SQLi, XSS)
+- [ ] No global state is used; dependencies are injected
+- [ ] Custom exceptions are thrown instead of generic ones
+
+## External References
+
+- [PHP Documentation](https://www.php.net/docs.php)
+- [PHP The Right Way](https://phptherightway.com)
+- [PHP FIG (PSR Standards)](https://www.php-fig.org/psr/)
+- [PHPStan Static Analysis](https://phpstan.org)
