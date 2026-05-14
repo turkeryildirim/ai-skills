@@ -34,6 +34,8 @@ Each CLI wrapper includes:
 | :--- | :--- | :--- |
 | **API Design Patterns** | RESTful API design and best practices. | Resource design, Error handling (RFC 7807), Security, Pagination, gRPC, Versioning. |
 | **Code Standards** | Universal code design and clean code principles. | SOLID, KISS, YAGNI, DRY, TDA, Testability, Complexity, Naming conventions. |
+| **Go / Golang** | Modern Go development practices and idioms. | Package design, concurrency, error handling, performance, observability, toolchain conventions. |
+| **Go Tester** | Expert guidance for Go testing. | Table-driven tests, parallelism, mocking boundaries, goleak, integration tags, fuzzing, benchmarks. |
 | **JavaScript / TypeScript** | Modern JS/TS for backend and advanced logic. | Node.js, Type systems, TS migration/interop, Runtime validation (Zod/io-ts), Backend architecture. |
 | **Laravel** | Comprehensive Laravel 13 development. | Eloquent, Database optimization, Caching, OWASP security, Inertia.js. |
 | **Microservices** | Distributed systems patterns (PHP & TS). | Service boundaries, Data consistency (Saga/CQRS), Resilience, Observability, Idempotency. |
@@ -61,6 +63,8 @@ All agents defined in this repository:
 | `arch-swift-pro` | Architecture Advisor | Swift/iOS/macOS architecture analysis |
 | `api-design-pro` | API Design Patterns | REST/GraphQL/gRPC API design |
 | `code-standards-pro` | Code Standards | SOLID, Clean Code, refactoring guidance |
+| `golang-pro` | Go / Golang | Idiomatic Go, concurrency, performance, package/API design |
+| `golang-tester-pro` | Go Tester | Go testing, table-driven suites, mocks, benchmarks, fuzzing |
 | `javascript-pro` | JavaScript | Modern JS, Node.js, async patterns |
 | `typescript-pro` | JavaScript | Advanced TypeScript, type systems |
 | `js-test-pro` | JavaScript | Vitest/Jest testing for JS/TS code |
@@ -106,7 +110,7 @@ Hook references are organized by domain in `references/hooks/`:
 
 ### For AI Agents
 - Proactively load the relevant `SKILL.md` when a task matches its description.
-- **Separation of Concerns (Mandatory):** Implementation agents (e.g., `typescript-pro`, `laravel-pro`) MUST NOT write tests. Delegate to `js-test-pro` for JavaScript/TypeScript tests, and to `phpunit-pro` for PHP tests.
+- **Separation of Concerns (Mandatory):** Implementation agents (e.g., `golang-pro`, `typescript-pro`, `laravel-pro`) MUST NOT write tests. Delegate to `golang-tester-pro` for Go tests, `js-test-pro` for JavaScript/TypeScript tests, and `phpunit-pro` for PHP tests.
 - Reference specific rules in `rules/*.md` for concrete, example-backed feedback.
 - Use `references/*.md` for deeper understanding of patterns or hook lookups.
 - Invoke CLI wrapper agents for cross-model code analysis without interpreting results.
@@ -117,9 +121,9 @@ To maintain high specialization and context efficiency, follow this delegation p
 
 1. **Architecture Analysis:** Use `architecture-advisor` (routes to the correct language persona automatically).
 2. **Implementation:** Use the specific `<domain>-pro` agent (e.g., `laravel-pro`, `typescript-pro`).
-3. **Testing:** Use `js-test-pro` for JavaScript/TypeScript, or `phpunit-pro` for PHP. Never combine implementation and testing in a single agent call.
+3. **Testing:** Use `golang-tester-pro` for Go, `js-test-pro` for JavaScript/TypeScript, or `phpunit-pro` for PHP. Never combine implementation and testing in a single agent call.
 
 ## Scope
 
-- **Covered**: Best practices, modern syntax (PHP 8.4+, TS 5.x, Laravel 13, WordPress 6.9+, WooCommerce 9.6+), industry-standard design patterns, comprehensive hook references.
+- **Covered**: Best practices, modern syntax (Go 1.21+, PHP 8.4+, TS 5.x, Laravel 13, WordPress 6.9+, WooCommerce 9.6+), industry-standard design patterns, comprehensive hook references.
 - **Not Covered**: Project-specific business logic, legacy framework versions, or non-technical project management.
