@@ -6,7 +6,7 @@ model: inherit
 
 # Architecture Advisor
 
-Systematic project architecture analysis across JavaScript, React, Node.js, PHP, and Swift codebases. Scans project structure, detects the technology stack, applies language-specific analysis rules, and produces a structured report with rated strengths and issues.
+Systematic project architecture analysis across JavaScript, React, Node.js, PHP, Swift, SwiftUI, and Go codebases. Scans project structure, detects the technology stack, applies language-specific analysis rules, and produces a structured report with rated strengths and issues.
 
 **This skill produces analysis and recommendations only. It does NOT write implementation code.**
 
@@ -20,7 +20,9 @@ Language-specific analysis personas. Always load the persona that matches the de
 | **arch-javascript-pro** | Browser JS, Vanilla, build-tool frontends | `package.json` without framework markers, `webpack.config`, `vite.config` |
 | **arch-react-pro** | React, Next.js, Remix, Vite+React | `react` in `package.json` dependencies |
 | **arch-node-pro** | Node.js backends, Express, Fastify, NestJS | `package.json` with server framework, no `react`/`vue` in deps |
-| **arch-swift-pro** | Swift, SwiftUI, UIKit, iOS/macOS apps | `Package.swift`, `.xcodeproj`, `.xcworkspace` |
+| **arch-swift-pro** | Swift, UIKit, mixed UIKit+SwiftUI, iOS/macOS | `Package.swift`, `.xcodeproj`, `.xcworkspace`, `UIViewController` subclasses dominant |
+| **arch-swiftui-pro** | SwiftUI-first, Swift 5.9+, SwiftData, iOS 16+ | `*App.swift` with `@main`, `struct * : View` dominant, `@Observable`, `NavigationStack` |
+| **arch-golang-pro** | Go, Gin, Chi, Echo, gRPC, CLI tools | `go.mod`, `main.go`, `cmd/` directory, `*.go` files |
 
 ## When to Use
 
@@ -45,7 +47,7 @@ Language-specific analysis personas. Always load the persona that matches the de
 
 ### MUST DO
 
-- **Always start with a full project scan** — read `package.json`, `composer.json`, `Package.swift`, `Podfile`, `*.csproj`, `Makefile`, `.env.example`, and top-level directory listing before any analysis
+- **Always start with a full project scan** — read `package.json`, `composer.json`, `Package.swift`, `Podfile`, `go.mod`, `*.csproj`, `Makefile`, `.env.example`, and top-level directory listing before any analysis
 - **Detect the stack explicitly** — name the language, framework, version, and key libraries in the report header
 - **Load the matching persona** — route to the language-specific agent after detection
 - **Rate every finding** — use CRITICAL / HIGH / MEDIUM / LOW for each issue
@@ -71,7 +73,9 @@ Language-specific analysis personas. Always load the persona that matches the de
 | 4 | JavaScript Architecture | HIGH | Stack detected as Browser JS / Vanilla / Vite frontend | [`references/javascript-architecture-guide.md`](references/javascript-architecture-guide.md) | `js-` | 2 |
 | 5 | React Architecture | HIGH | Stack detected as React/Next.js/Remix | [`references/react-architecture-guide.md`](references/react-architecture-guide.md) | `react-` | 3 |
 | 6 | Node.js Architecture | HIGH | Stack detected as Node.js backend | [`references/node-architecture-guide.md`](references/node-architecture-guide.md) | `node-` | 3 |
-| 7 | Swift Architecture | HIGH | Stack detected as Swift/SwiftUI/UIKit | [`references/swift-architecture-guide.md`](references/swift-architecture-guide.md) | `swift-` | 3 |
+| 7 | Swift Architecture | HIGH | Stack detected as Swift/UIKit (mixed or UIKit-dominant) | [`references/swift-architecture-guide.md`](references/swift-architecture-guide.md) | `swift-` | 3 |
+| 8 | SwiftUI Architecture | HIGH | Stack detected as SwiftUI-first (Swift 5.9+, iOS 16+) | [`references/swiftui-architecture-guide.md`](references/swiftui-architecture-guide.md) | `swiftui-` | 3 |
+| 9 | Go Architecture | HIGH | Stack detected as Go/Golang | [`references/golang-architecture-guide.md`](references/golang-architecture-guide.md) | `golang-` | 3 |
 
 ## Rule Index
 
@@ -93,6 +97,12 @@ Language-specific analysis personas. Always load the persona that matches the de
 ### Swift Analysis (`swift-`)
 `swift-arch-patterns` · `swift-module-structure` · `swift-dependency-injection`
 
+### SwiftUI Analysis (`swiftui-`)
+`swiftui-view-architecture` · `swiftui-state-management` · `swiftui-data-flow`
+
+### Go Analysis (`golang-`)
+`golang-project-structure` · `golang-concurrency-patterns` · `golang-dependency-management`
+
 ## Validation Checklist
 
 - [ ] Project scan completed (config files + directory tree read)
@@ -112,3 +122,7 @@ Language-specific analysis personas. Always load the persona that matches the de
 - [The Twelve-Factor App](https://12factor.net/)
 - [OWASP Architectural Cheat Sheet](https://cheatsheetseries.owasp.org/)
 - [Swift Package Manager](https://www.swift.org/package-manager/)
+- [Go Standard Project Layout](https://github.com/golang-standards/project-layout)
+- [Effective Go](https://go.dev/doc/effective_go)
+- [SwiftUI Documentation — Apple Developer](https://developer.apple.com/documentation/swiftui)
+- [The Composable Architecture](https://github.com/pointfreeco/swift-composable-architecture)
