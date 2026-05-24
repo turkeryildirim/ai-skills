@@ -261,7 +261,7 @@ fun scrollAndClickItem() {
 @Test
 fun dynamicContentAppearsAfterLoad() {
     composeRule.setContent {
-        val items by remember { mutableStateOf(listOf<String>()) }
+        var items by remember { mutableStateOf(listOf<String>()) }
         LaunchedEffect(Unit) {
             delay(500)
             items = listOf("Alpha", "Beta", "Gamma")
@@ -367,5 +367,5 @@ Use `useUnmergedTree = true` when a composable merges its children's semantics (
 
 ## Cross References
 
-- Related rules: `ui-test-compose-testtag`, `ui-test-compose-isolation`, `ui-test-compose-waituntil`, `ui-test-compose-state-restoration`, `ui-test-no-sleep`
+- Related rules: `ui-test-testtag-selectors`, `ui-test-no-sleep`, `ui-test-per-test-isolation`, `ui-test-robot-pattern`
 - Related references: [`espresso-testing.md`](espresso-testing.md), [`instrumented-testing.md`](instrumented-testing.md), [`coverage.md`](coverage.md)

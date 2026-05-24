@@ -343,5 +343,5 @@ suspend fun fetchUser(id: String): User {
 
 ## Cross References
 
-- Related rules: `net-status-validation`, `net-nullable-responses`, `net-retry-backoff`, `net-token-refresh`, `net-suspend-only`
+- Related rules: `net-status-validation`, `net-no-main-thread-calls`, `net-protocol-client`, `net-no-completion-handlers`, `net-retry-with-backoff`, `kt-server-response-nullable`
 - Related references: [`dependency-injection.md`](dependency-injection.md), [`persistence.md`](persistence.md), [`build-configuration.md`](build-configuration.md)

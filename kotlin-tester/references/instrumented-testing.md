@@ -234,5 +234,5 @@ companion object {
 
 ## Cross References
 
-- Related rules: `ui-test-orchestrator`, `ui-test-no-sleep`, `ui-test-per-test-isolation`, `ui-test-idling-resource`, `ui-test-disable-animations`
+- Related rules: `ui-test-orchestrator`, `ui-test-no-sleep`, `ui-test-per-test-isolation`, `ui-test-idling-resource`, `ui-test-testtag-selectors`, `ui-test-robot-pattern`, `ui-test-no-live-network`, `ui-test-stable-selectors`
 - Related references: [`espresso-testing.md`](espresso-testing.md), [`compose-testing.md`](compose-testing.md), [`ci-testing.md`](ci-testing.md), [`coverage.md`](coverage.md)

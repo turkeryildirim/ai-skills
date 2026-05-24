@@ -376,5 +376,5 @@ android {
 
 ## Cross References
 
-- Related rules: `gradle-version-catalog`, `gradle-no-hardcoded-versions`, `gradle-bom-usage`, `gradle-dependency-scopes`, `gradle-performance`
+- Related rules: `gradle-version-catalog`, `gradle-ksp-over-kapt`, `gradle-implementation-over-api`
 - Related references: [`build-convention-plugins.md`](build-convention-plugins.md), [`dependency-injection.md`](dependency-injection.md)

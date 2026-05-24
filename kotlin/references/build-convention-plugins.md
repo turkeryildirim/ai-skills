@@ -164,14 +164,14 @@ class AndroidComposeConventionPlugin : Plugin<Project> {
                 buildFeatures {
                     compose = true
                 }
+            }
 
-                dependencies {
-                    val bom = libs.findLibrary("compose-bom").get()
-                    add("implementation", platform(bom))
-                    add("implementation", libs.findLibrary("compose-ui").get())
-                    add("implementation", libs.findLibrary("compose-material3").get())
-                    add("debugImplementation", libs.findLibrary("compose-ui-tooling").get())
-                }
+            dependencies {
+                val bom = libs.findLibrary("compose-bom").get()
+                add("implementation", platform(bom))
+                add("implementation", libs.findLibrary("compose-ui").get())
+                add("implementation", libs.findLibrary("compose-material3").get())
+                add("debugImplementation", libs.findLibrary("compose-ui-tooling").get())
             }
         }
     }
@@ -268,9 +268,21 @@ dependencies {
 
 ## 7. Accessing Version Catalog in Plugins
 
-```kotlin
-val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+To access the version catalog smoothly inside convention plugins, define a helper extension property in a shared file within `build-logic` (e.g., `src/main/java/KotlinAndroid.kt`):
 
+```kotlin
+import org.gradle.api.artifacts.VersionCatalog
+import org.gradle.api.artifacts.VersionCatalogsExtension
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.getByType
+
+val Project.libs: VersionCatalog
+    get() = extensions.getByType<VersionCatalogsExtension>().named("libs")
+```
+
+Then you can use it in your plugins like this:
+
+```kotlin
 libs.findLibrary("compose-ui").get()
 libs.findPlugin("kotlin-android").get().pluginId
 libs.findBundle("retrofit").get()
@@ -303,5 +315,5 @@ If the answer is "yes" to all, create a new plugin. If the config is only in one
 
 ## Cross References
 
-- Related rules: `conv-no-duplication`, `conv-no-hardcoded-versions`, `conv-single-concern`, `conv-shared-extensions`, `conv-plugin-manager-apply`
+- Related rules: `conv-no-duplicate-config`, `conv-no-hardcoded-versions`, `conv-one-concern-per-plugin`, `conv-shared-logic-extracted`, `gradle-version-catalog`
 - Related references: [`build-configuration.md`](build-configuration.md), [`dependency-injection.md`](dependency-injection.md)

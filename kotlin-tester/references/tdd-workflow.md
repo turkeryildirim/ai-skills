@@ -356,5 +356,5 @@ fun `should return error for blank email`() { }
 
 ## Cross References
 
-- Related rules: `test-naming-convention`, `test-given-when-then`, `test-usecase-pattern`, `test-viewmodel-pattern`
+- Related rules: `test-behavior-names`, `test-given-when-then`, `test-tdd-red-first`
 - Related references: [`unit-testing.md`](unit-testing.md), [`mocking.md`](mocking.md), [`property-testing.md`](property-testing.md)

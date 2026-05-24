@@ -390,5 +390,5 @@ fun `property test with custom seed for reproducibility`() {
 
 ## Cross References
 
-- Related rules: `test-naming-convention`, `test-given-when-then`, `test-parameterized`
+- Related rules: `test-behavior-names`, `test-given-when-then`, `test-kotest-assertions`
 - Related references: [`unit-testing.md`](unit-testing.md), [`tdd-workflow.md`](tdd-workflow.md), [`mocking.md`](mocking.md)

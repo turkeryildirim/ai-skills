@@ -73,7 +73,12 @@ In JUnit 5, you use `@ExtendWith` instead of `@Rule`.
 class UserViewModelTest {
 
     private val getUserUseCase = mockk<GetUserInfoUseCase>()
-    private val viewModel = UserViewModel(getUserUseCase)
+    private lateinit var viewModel: UserViewModel
+
+    @BeforeEach
+    fun setUp() {
+        viewModel = UserViewModel(getUserUseCase)
+    }
 
     @Test
     fun `should update ui state to Success when use case returns user`() = runTest {
@@ -159,5 +164,5 @@ viewModel.uiState.test {
 
 ## Cross References
 
-- Related rules: `test-given-when-then`, `test-junit5-android`, `ctest-runtest-for-suspend`, `ctest-turbine-for-flow`
+- Related rules: `test-given-when-then`, `test-junit5-android`, `ctest-runtest-for-suspend`, `ctest-turbine-for-flow`, `test-fresh-sut`, `test-no-sleep`
 - Related references: [`kotest.md`](kotest.md), [`mocking.md`](mocking.md), [`flow-testing.md`](flow-testing.md)

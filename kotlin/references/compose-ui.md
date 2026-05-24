@@ -442,5 +442,5 @@ fun LocationTracker(onLocationUpdate: (Location) -> Unit) {
 
 ## Cross References
 
-- Related rules: `compose-vm-pattern`, `compose-state-management`, `compose-no-suspend-in-body`, `compose-lazy-keys`, `compose-lifecycle-collection`, `compose-side-effects`, `compose-unstable-params`, `compose-stateless-composables`, `compose-navigation`, `compose-scaffold-pattern`
+- Related rules: `compose-stable-params`, `compose-no-vm-in-composable`, `compose-launched-effect-for-async`, `compose-no-side-effects`, `compose-remember-flow`, `compose-testtag-for-testing`
 - Related references: [`kotlin-conventions.md`](kotlin-conventions.md), [`coroutines.md`](coroutines.md), [`architecture.md`](architecture.md), [`navigation-coordinator.md`](navigation-coordinator.md)

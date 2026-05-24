@@ -231,7 +231,7 @@ onView(withId(R.id.error_label)).check(matches(withTextColor(Color.RED)))
 ```kotlin
 fun withDrawable(resourceId: Int): Matcher<View> {
     return object : BoundedMatcher<View, ImageView>(ImageView::class.java) {
-        override fun matchesSafly(imageView: ImageView): Boolean {
+        override fun matchesSafely(imageView: ImageView): Boolean {
             return imageView.drawable != null &&
                 imageView.drawable.constantState ==
                 imageView.context.getDrawable(resourceId)?.constantState
@@ -421,15 +421,24 @@ val disableAnimations = DisableAnimationsRule()
 ### Print view hierarchy
 
 ```kotlin
-onView(isRoot()).perform(ViewActions.actionWithAssertions(
-    object : ViewAction {
-        override fun getConstraints() = any(View::class.java)
-        override fun getDescription() = "Print view hierarchy"
-        override fun perform(uiController: UiController, view: View) {
-            Log.d("TEST_HIERARCHY", ViewHierarchyDumper.dump(view))
+onView(isRoot()).perform(object : ViewAction {
+    override fun getConstraints(): Matcher<View> = isAssignableFrom(View::class.java)
+    override fun getDescription() = "Print view hierarchy"
+    override fun perform(uiController: UiController, view: View) {
+        Log.d("TEST_HIERARCHY", dumpView(view))
+    }
+})
+
+fun dumpView(view: View, depth: Int = 0): String {
+    val indent = "  ".repeat(depth)
+    var result = "$indent$view\n"
+    if (view is ViewGroup) {
+        for (i in 0 until view.childCount) {
+            result += dumpView(view.getChildAt(i), depth + 1)
         }
     }
-))
+    return result
+}
 ```
 
 ### Screenshot on failure
@@ -454,5 +463,5 @@ class ScreenshotRule : TestWatcher() {
 
 ## Cross References
 
-- Related rules: `ui-test-robot-pattern`, `ui-test-idling-resource`, `ui-test-no-sleep`, `ui-test-intent-stubbing`, `ui-test-custom-matchers`, `ui-test-disable-animations`, `ui-test-recyclerview`, `ui-test-accessibility-identifiers`
+- Related rules: `ui-test-robot-pattern`, `ui-test-idling-resource`, `ui-test-no-sleep`, `ui-test-orchestrator`, `ui-test-no-live-network`, `ui-test-stable-selectors`, `ui-test-per-test-isolation`
 - Related references: [`compose-testing.md`](compose-testing.md), [`instrumented-testing.md`](instrumented-testing.md), [`coverage.md`](coverage.md)

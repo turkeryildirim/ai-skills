@@ -513,5 +513,5 @@ class MigrationTest {
 
 ## Cross References
 
-- Related rules: `arch-no-entity-in-ui`, `arch-repo-iface-in-domain`, `arch-mapper-in-data`, `arch-repo-returns-flow`
+- Related rules: `arch-no-entity-in-ui`, `arch-repo-iface-in-domain`, `arch-no-fat-repository`
 - Related references: [`dependency-injection.md`](dependency-injection.md), [`networking.md`](networking.md), [`build-configuration.md`](build-configuration.md)

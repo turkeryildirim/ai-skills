@@ -220,7 +220,7 @@ fun `should use real add but mock multiply`() {
 
     val result = calculator.complexOperation(5)
 
-    assertEquals(100, result)
+    assertEquals(1500, result)
     verify(exactly = 1) { calculator.add(5, 10) }
     verify(exactly = 1) { calculator.multiply(5, 2) }
 }
@@ -317,5 +317,5 @@ Or use `@BeforeEach` / `@AfterEach` with JUnit 5. For JUnit 4, use `@Before` / `
 
 ## Cross References
 
-- Related rules: `test-no-mock-data-classes`, `test-use-fakes-for-flows`, `test-given-when-then`, `ctest-turbine`
+- Related rules: `test-no-mock-data-classes`, `ctest-fake-over-mock-flow`, `test-given-when-then`, `ctest-turbine-for-flow`
 - Related references: [`unit-testing.md`](unit-testing.md), [`flow-testing.md`](flow-testing.md)

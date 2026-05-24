@@ -57,12 +57,12 @@ Expert guidance for structuring multi-module Kotlin projects with strict depende
 
 | Rule | ID | Description |
 |------|----|-------------|
-| No feature cross-dependency | `arch-no-feature-cross` | `:feature:login` must NOT depend on `:feature:settings` |
-| No component cross-dependency | `arch-no-component-cross` | `:component:user` must NOT depend on `:component:order` |
-| No dependency on app | `arch-no-app-dependency` | No module may `implementation(project(":app"))` |
-| No business logic in feature | `arch-no-feature-domain` | UseCases live in component, not feature |
-| No shared mutable state | `arch-no-shared-state` | Features communicate via integration module or events |
-| No repo implementation in domain | `arch-no-repo-impl-domain` | Only interfaces in domain, implementations in data |
+| No feature cross-dependency | `arch-no-feature-cross-dep` | `:feature:login` must NOT depend on `:feature:settings` |
+| No component cross-dependency | `arch-no-component-cross-dep` | `:component:user` must NOT depend on `:component:order` |
+| No dependency on app | `arch-no-dependency-on-app` | No module may `implementation(project(":app"))` |
+| No business logic in feature | `arch-no-business-in-feature` | UseCases live in component, not feature |
+| No circular dependencies | `arch-no-circular-deps` | If A depends on B, B must not depend on A |
+| No repo implementation in domain | `arch-repo-iface-in-domain` | Only interfaces in domain, implementations in data |
 
 ## 3. Feature Module Structure
 
@@ -501,5 +501,5 @@ class HomeFeedUseCase(
 
 ## Cross References
 
-- Related rules: `arch-module-layers`, `arch-no-feature-cross`, `arch-no-component-cross`, `arch-no-app-dependency`, `arch-no-feature-domain`, `arch-no-shared-state`, `arch-no-repo-impl-domain`, `arch-contract-pattern`, `arch-usecase-pattern`, `arch-mapper-pattern`, `arch-di-app-only`, `arch-integration-modules`
+- Related rules: `arch-domain-pure-kotlin`, `arch-no-entity-in-ui`, `arch-logic-in-usecases`, `arch-no-fat-repository`, `arch-no-circular-deps`, `arch-no-feature-cross-dep`, `arch-no-component-cross-dep`, `arch-no-dependency-on-app`, `arch-no-business-in-feature`, `arch-no-ui-in-component`, `arch-di-only-in-app`, `arch-repo-iface-in-domain`
 - Related references: [`kotlin-conventions.md`](kotlin-conventions.md), [`coroutines.md`](coroutines.md), [`compose-ui.md`](compose-ui.md), [`navigation-coordinator.md`](navigation-coordinator.md)

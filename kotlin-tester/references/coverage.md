@@ -208,5 +208,5 @@ filters {
 
 ## Cross References
 
-- Related rules: `cov-min-80`, `cov-critical-100`, `cov-exclude-data-classes`, `cov-exclude-generated`, `cov-verify-ci`, `cov-html-report`
+- Related rules: `cov-kover-config`, `cov-threshold-enforcement`
 - Related references: [`ci-testing.md`](ci-testing.md), [`espresso-testing.md`](espresso-testing.md), [`compose-testing.md`](compose-testing.md)

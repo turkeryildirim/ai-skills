@@ -514,20 +514,23 @@ class EvenNumberTest : FunSpec({
 })
 ```
 
-### Table-Driven Tests
+### Table-Driven Tests (with forAll)
 
 ```kotlin
 import io.kotest.core.spec.style.StringSpec
-import io.kotest.datatest.withData
+import io.kotest.data.forAll
+import io.kotest.data.row
+import io.kotest.matchers.shouldBe
 
 class StringOpsTest : StringSpec({
-    withData(
-        nameFn = { "${it.input} -> ${it.output}" },
-        io.kotest.data.row("hello", "HELLO"),
-        io.kotest.data.row("world", "WORLD"),
-        io.kotest.data.row("", "")
-    ) { (input, output) ->
-        input.uppercase() shouldBe output
+    "should convert to uppercase" {
+        forAll(
+            row("hello", "HELLO"),
+            row("world", "WORLD"),
+            row("", "")
+        ) { input, output ->
+            input.uppercase() shouldBe output
+        }
     }
 })
 ```
@@ -558,6 +561,8 @@ class StringOpsTest : StringSpec({
 | Ignoring coroutine context in suspend tests | Unresolved coroutine scope errors | Always wrap suspend calls in `runTest { }` |
 
 ## 11. Cross References
+
+- Related rules: `test-kotest-assertions`, `test-fresh-sut`, `test-no-sleep`, `test-no-shared-state`
 
 | Topic | Reference |
 |-------|-----------|

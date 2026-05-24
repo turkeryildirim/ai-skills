@@ -288,7 +288,6 @@ class FlowTimingTest {
 
     @Test
     fun `should emit values with controlled timing`() = runTest {
-        val testDispatcher = StandardTestDispatcher()
         val flow = flow {
             emit(1)
             delay(100)
@@ -300,13 +299,14 @@ class FlowTimingTest {
         flow.test {
             assertEquals(1, awaitItem())
 
-            testDispatcher.advanceTimeBy(50)
+            // Advance virtual time using the TestScope receiver
+            advanceTimeBy(50)
             expectNoEvents()
 
-            testDispatcher.advanceTimeBy(50)
+            advanceTimeBy(50)
             assertEquals(2, awaitItem())
 
-            testDispatcher.advanceTimeBy(200)
+            advanceTimeBy(200)
             assertEquals(3, awaitItem())
 
             awaitComplete()
@@ -389,5 +389,5 @@ val rule = MainDispatcherRule(StandardTestDispatcher())
 
 ## Cross References
 
-- Related rules: `ctest-turbine`, `ctest-advance-until-idle`, `ctest-stateflow-initial`, `ctest-fake-repository`, `ctest-no-unconfined-for-timing`, `ctest-cancel-turbine`
+- Related rules: `ctest-runtest-for-suspend`, `ctest-advance-until-idle`, `ctest-turbine-for-flow`, `ctest-fake-over-mock-flow`, `ctest-test-dispatcher`
 - Related references: [`unit-testing.md`](unit-testing.md), [`mocking.md`](mocking.md)

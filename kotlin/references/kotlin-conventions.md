@@ -386,6 +386,8 @@ Delegation is preferred over inheritance for composing behavior.
 
 ### Delegated Properties for Preferences
 ```kotlin
+// Note: prefs.string() and prefs.boolean() are custom delegated property extensions, e.g.:
+// fun SharedPreferences.string(key: String, def: String) = ReadWriteProperty<Any?, String>
 class UserPreferences(private val prefs: SharedPreferences) {
     var theme: String by prefs.string("theme", "system")
     var notificationsEnabled: Boolean by prefs.boolean("notifications", true)
@@ -395,7 +397,7 @@ class UserPreferences(private val prefs: SharedPreferences) {
 ## 11. DSL Builders
 
 ### @DslMarker for Type Safety
-```kslim
+```kotlin
 @DslMarker
 annotation class ServerDsl
 ```
@@ -551,23 +553,24 @@ fun User.Companion.fromJson(json: JsonObject): User =
 | Avoid | Instead | Rule |
 |-------|---------|------|
 | `!!` operator | Safe calls, Elvis, `let`, early return | `kt-no-force-unwrap` |
-| `var` in data classes | `val` + `copy()` | `kt-immutable-data` |
-| `lateinit` on non-JVM platforms | `by lazy` or nullable + initialize | `kt-prefer-lazy` |
-| `Any` return type | Specific or generic type | `kt-explicit-types` |
-| Java-style getters/setters | Kotlin properties | `kt-use-properties` |
+| `var` in data classes | `val` + `copy()` | `kt-immutable-data-class` |
+| Unsafe lateinit access | Check `::property.isInitialized` or use nullable/lazy | `kt-no-lateinit-unsafe` |
 | Overloaded functions | Default parameters | `kt-default-params` |
-| `ArrayList`, `HashMap` directly | `listOf()`, `mapOf()` | `kt-immutable-collections` |
-| Exception flow control | `Result` / `Try` sealed type | `kt-no-exception-control` |
-| String concatenation in loops | `buildString` or `joinToString` | `kt-string-builder` |
-| `for (i in 0..list.size)` | `list.indices` or `list.forEachIndexed` | `kt-use-indices` |
-| Utility classes with statics | Extension functions or objects | `kt-extensions-over-utils` |
-| `if/else` chains for enum/sealed | `when` expression | `kt-prefer-when` |
-| Mutable global state | Dependency injection | `kt-no-global-mutable` |
-| Companion object for all constants | Top-level `const val` | `kt-top-level-const` |
-| Implicit `it` in nested lambdas | Named lambda parameter | `kt-named-lambda-params` |
-| `as` cast without check | Safe cast `as?` | `kt-safe-cast` |
+| Exception flow control | `Result` / `Try` sealed type | `kt-no-exception-control-flow` |
+| Chained collection operations | Use `.asSequence()` for 3+ operations / large data | `kt-sequences-large-collections` |
+| Mutable public collections | Expose read-only List, mutate internally | `kt-no-mutable-public` |
+| Raw identifiers for IDs | Use `@JvmInline value class` | `kt-value-classes` |
+| Generic package names | Use PascalCase/camelCase/SCREAMING_SNAKE appropriately | `kt-naming-conventions` |
+| Non-null server fields | Default nullable fields (`= null`) | `kt-server-response-nullable` |
+| Nested scope functions | Chain safe calls or use local variables | `kt-no-nested-scope-functions` |
+| Ignoring platform type nullability | Treat all return values from Java as nullable | `kt-handle-java-platform-types` |
+| Value class without validation | Add `init { require(...) }` for compile-time invariants | `kt-value-class-validation` |
+| String-based routes | Type-safe Navigation (Navigation 2.8.0+) | `kt-type-safe-navigation` |
+| GSON or manual JSON parsing | `kotlinx-serialization-json` | `kt-serialization-json` |
+| Platform-specific expectations | Interface-based dependency injection | `kt-kmp-expect-actual` |
+| Hardcoded preview data | `PreviewParameterProvider` | `kt-composable-preview-parameter` |
 
 ## Cross References
 
-- Related rules: `kt-no-force-unwrap`, `kt-immutable-data`, `kt-default-params`, `kt-immutable-collections`, `kt-no-exception-control`, `kt-prefer-when`, `kt-explicit-types`, `kt-use-properties`, `kt-extensions-over-utils`, `kt-safe-cast`, `kt-prefer-lazy`, `kt-top-level-const`, `kt-named-lambda-params`, `kt-string-builder`, `kt-use-indices`
+- Related rules: `kt-no-force-unwrap`, `kt-immutable-data-class`, `kt-sealed-interface`, `kt-default-params`, `kt-no-exception-control-flow`, `kt-sequences-large-collections`, `kt-no-mutable-public`, `kt-value-classes`, `kt-naming-conventions`, `kt-server-response-nullable`, `kt-no-lateinit-unsafe`, `kt-lambda-return-label`, `kt-lifecycle-paired-observer`, `kt-no-nested-scope-functions`, `kt-handle-java-platform-types`, `kt-value-class-validation`, `kt-logging-levels`, `kt-type-safe-navigation`, `kt-serialization-json`, `kt-kmp-expect-actual`, `kt-composable-preview-parameter`, `kt-opt-in-annotations`
 - Related references: [`coroutines.md`](coroutines.md), [`architecture.md`](architecture.md), [`compose-ui.md`](compose-ui.md), [`navigation-coordinator.md`](navigation-coordinator.md)

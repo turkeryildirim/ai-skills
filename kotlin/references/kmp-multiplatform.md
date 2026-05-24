@@ -167,5 +167,5 @@ actual val ioDispatcher = Dispatchers.Default // iOS uses Default for IO
 
 ## Cross References
 
-- Related rules: `kt-kmp-expect-actual`, `coro-kmp-dispatchers`
+- Related rules: `kt-kmp-expect-actual`, `coro-inject-dispatchers`
 - Related references: [`coroutines.md`](coroutines.md), [`architecture.md`](architecture.md), [`compose-ui.md`](compose-ui.md)

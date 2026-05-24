@@ -273,28 +273,12 @@ adb shell am instrument -w -e numShards 4 -e shardIndex 0 \
 
 ### Gradle sharding with GMD
 
-```kotlin
-android {
-    testOptions {
-        managedDevices {
-            localDevices {
-                create("pixel8api34shard0") {
-                    device = "Pixel 8"
-                    apiLevel = 34
-                    systemImageSource = "aosp-atd"
-                    testOptions {
-                        execution = "ANDROIDX_TEST_ORCHESTRATOR"
-                        managedDevice {
-                            testOptions {
-                                additionalTestOutputDir = "build/shard0"
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+GMD tests can be sharded directly from the command line without modifying the build script:
+
+```bash
+./gradlew pixel8api34AndroidTest \
+    -Pandroid.testInstrumentationRunnerArguments.numShards=4 \
+    -Pandroid.testInstrumentationRunnerArguments.shardIndex=0
 ```
 
 ### Firebase Test Lab smart sharding
@@ -313,5 +297,5 @@ The `--num-uniform-shards` flag automatically splits tests across multiple virtu
 
 ## Cross References
 
-- Related rules: `cov-min-80`, `cov-verify-ci`, `ui-test-orchestrator`, `ui-test-no-sleep`, `ui-test-per-test-isolation`, `ui-test-disable-animations`
+- Related rules: `cov-kover-config`, `cov-threshold-enforcement`, `ui-test-orchestrator`, `ui-test-no-sleep`, `ui-test-per-test-isolation`
 - Related references: [`coverage.md`](coverage.md), [`espresso-testing.md`](espresso-testing.md), [`compose-testing.md`](compose-testing.md), [`instrumented-testing.md`](instrumented-testing.md)
