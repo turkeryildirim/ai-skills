@@ -89,6 +89,31 @@ Actionable directives for modern Kotlin, Coroutines, Architecture, and Android d
 - **Rule:** Use `Log.i` for normal flow checkpoints, `Log.w` for recoverable anomalies, `Log.e` for failures/errors. Never log sensitive data.
 - **Avoid:** Using `Log.e` for normal flow or `Log.d` in production.
 
+### `kt-type-safe-navigation`
+- **Context:** Navigation.
+- **Rule:** Use Kotlin Serialization-based type-safe navigation (Navigation 2.8.0+). Define destinations as `@Serializable` objects or data classes.
+- **Avoid:** String-based route paths with manual argument parsing.
+
+### `kt-serialization-json`
+- **Context:** Serialization.
+- **Rule:** Use `kotlinx-serialization-json` for all JSON processing. Set `ignoreUnknownKeys = true` and `explicitNulls = false` for resilience.
+- **Avoid:** GSON or manual JSON parsing in new code.
+
+### `kt-kmp-expect-actual`
+- **Context:** Kotlin Multiplatform.
+- **Rule:** Use `expect`/`actual` only when necessary for platform-specific APIs. Prefer interface-based DI for platform abstractions where possible.
+- **Avoid:** Overusing `expect`/`actual` for things that can be handled via abstraction.
+
+### `kt-composable-preview-parameter`
+- **Context:** Compose Development.
+- **Rule:** Use `PreviewParameterProvider` to provide mock data for Composable previews. Enables testing multiple states (Loading, Success, Error) in Previews.
+- **Avoid:** Hardcoded mock data repeated across multiple Preview functions.
+
+### `kt-opt-in-annotations`
+- **Context:** Experimental APIs.
+- **Rule:** Use `@OptIn` for experimental APIs. Prefer project-wide opt-in via compiler arguments for stable features like `ExperimentalMaterial3Api` if used everywhere.
+- **Avoid:** Propagating `@RequiresOptIn` unless the calling API is also intended to be experimental.
+
 ## 2. Concurrency Patterns (`coro-`)
 
 ### `coro-no-globalscope`

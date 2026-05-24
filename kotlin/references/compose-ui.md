@@ -198,9 +198,44 @@ fun UserRow(user: UserUiModel, onClick: () -> Unit) { ... }
 ### Stateless Composables
 Prefer stateless composables that receive data and callbacks. State lives in ViewModel or the nearest common ancestor.
 
-## 5. Navigation in Compose
+## 5. Navigation in Compose (Traditional & Type-safe)
 
-### NavHost Setup (in :app module)
+### Type-safe Navigation (Navigation 2.8.0+, Recommended)
+
+Modern Compose navigation uses Kotlin Serialization to define routes as types.
+
+```kotlin
+import kotlinx.serialization.Serializable
+
+@Serializable
+object Home
+
+@Serializable
+data class UserDetail(val userId: String)
+
+@Serializable
+object Settings
+
+@Composable
+fun AppNavHost(navController: NavHostController) {
+    NavHost(navController = navController, startDestination = Home) {
+        composable<Home> {
+            HomeScreen(onUserClick = { id -> 
+                navController.navigate(UserDetail(userId = id)) 
+            })
+        }
+        composable<UserDetail> { backStackEntry ->
+            val detail = backStackEntry.toRoute<UserDetail>()
+            UserDetailScreen(userId = detail.userId)
+        }
+        composable<Settings> {
+            SettingsScreen()
+        }
+    }
+}
+```
+
+### Traditional Navigation (String-based)
 ```kotlin
 @Composable
 fun AppNavHost(navController: NavHostController) {
@@ -220,16 +255,6 @@ fun AppNavHost(navController: NavHostController) {
             UserDetailScreen(userId = userId)
         }
     }
-}
-```
-
-### Route Constants
-```kotlin
-object Routes {
-    const val USERS = "users"
-    const val USER_DETAIL = "users/{userId}"
-
-    fun userDetail(userId: String) = "users/$userId"
 }
 ```
 
@@ -307,13 +332,15 @@ LazyColumn(
 }
 ```
 
-### items() with Key
-Always provide `key` for efficient recomposition:
-```kotlin
-items(users, key = { it.id }) { user ->
-    UserRow(user = user, onClick = { onUserClick(user.id) })
-}
-```
+### Performance Rules
+
+| Rule | Description |
+|------|-------------|
+| Always provide `key` | Enables efficient item diffing and recomposition |
+| Avoid large items | Keep item composables simple; extract to smaller pieces |
+| Use `contentType` | Helps Compose pool similar item types |
+| Don't nest LazyColumn | Use a single LazyColumn with multiple item blocks |
+| `fillMaxSize()` on LazyColumn | Ensures scrolling works correctly |
 
 ### Sticky Headers
 ```kotlin
@@ -329,29 +356,31 @@ LazyColumn {
 }
 ```
 
-### Performance Rules
+## 8. PreviewParameterProvider
 
-| Rule | Description |
-|------|-------------|
-| Always provide `key` | Enables efficient item diffing and recomposition |
-| Avoid large items | Keep item composables simple; extract to smaller pieces |
-| Use `contentType` | Helps Compose pool similar item types |
-| Don't nest LazyColumn | Use a single LazyColumn with multiple item blocks |
-| `fillMaxSize()` on LazyColumn | Ensures scrolling works correctly |
+Use `PreviewParameterProvider` to efficiently preview different UI states.
 
 ```kotlin
-LazyColumn {
-    items(
-        count = items.size,
-        key = { items[it].id },
-        contentType = { "user_row" }
-    ) { index ->
-        UserRow(user = items[index])
+class UserUiStateProvider : PreviewParameterProvider<UserUiState> {
+    override val values = sequenceOf(
+        UserUiState.Loading,
+        UserUiState.Success(listOf(User("1", "Alice"), User("2", "Bob"))),
+        UserUiState.Error("Network failure")
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun UserScreenPreview(
+    @PreviewParameter(UserUiStateProvider::class) uiState: UserUiState
+) {
+    MyTheme {
+        UsersContent(uiState = uiState, onEvent = {}, onUserClick = {})
     }
 }
 ```
 
-## 8. collectAsStateWithLifecycle Usage
+## 9. collectAsStateWithLifecycle Usage
 
 ```kotlin
 @Composable
@@ -370,38 +399,12 @@ fun MyScreen(viewModel: MyViewModel = hiltViewModel()) {
 
 `collectAsStateWithLifecycle` uses `repeatOnLifecycle(STARTED)` internally, saving resources when the app is backgrounded.
 
-## 9. Side Effects
+## 10. Side Effects
 
 ### LaunchedEffect (Key-Triggered)
 ```kotlin
 LaunchedEffect(orderId) {
     viewModel.trackOrder(orderId)
-}
-```
-
-Restarted when `orderId` changes. Cancelled when composable leaves composition.
-
-### SideEffect (After Every Successful Recomposition)
-```kotlin
-SideEffect {
-    analytics.trackScreenView("UsersScreen")
-}
-```
-
-Use sparingly. Runs after every recomposition, not just the first.
-
-### rememberUpdatedState (Avoid Stale References)
-```kotlin
-@Composable
-fun AutoRefresh(refreshInterval: Duration, onRefresh: () -> Unit) {
-    val currentOnRefresh by rememberUpdatedState(onRefresh)
-
-    LaunchedEffect(refreshInterval) {
-        while (true) {
-            delay(refreshInterval.inWholeMilliseconds)
-            currentOnRefresh()
-        }
-    }
 }
 ```
 
@@ -413,10 +416,7 @@ fun LocationTracker(onLocationUpdate: (Location) -> Unit) {
         val listener = registerLocationListener { location ->
             onLocationUpdate(location)
         }
-
-        onDispose {
-            unregisterLocationListener(listener)
-        }
+        onDispose { unregisterLocationListener(listener) }
     }
 }
 ```
@@ -430,43 +430,15 @@ fun LocationTracker(onLocationUpdate: (Location) -> Unit) {
 | Cleanup on leave composition | `DisposableEffect` |
 | Notify external system after recomposition | `SideEffect` |
 | Periodic work with latest callback | `LaunchedEffect` + `rememberUpdatedState` |
-| Never | Direct suspend call in body |
 
-## 10. Compose Anti-Patterns
+## 11. Compose Anti-Patterns
 
 | Anti-Pattern | Problem | Fix |
 |-------------|---------|-----|
 | `ViewModel()` in composable body | New instance on every recomposition | Use `hiltViewModel()` or `viewModel()` |
 | Unstable parameters (Lambdas without `remember`) | Unnecessary recompositions | `remember { { ... } }` or method reference |
 | Side effects in composable body | Runs on every recomposition | Wrap in `LaunchedEffect` |
-| `Flow` without `remember` | New collector each recomposition | `collectAsStateWithLifecycle()` |
-| Mutable state in singleton/object | Unpredictable recomposition | State in ViewModel via `StateFlow` |
-| Passing ViewModel deep into tree | Tight coupling, untestable | Pass data and callbacks only |
-| `mutableStateOf` in ViewModel | Not thread-safe | Use `MutableStateFlow` in ViewModel |
 | Heavy computation in composable | Jank, frame drops | Move to ViewModel, use `derivedStateOf` |
-| Creating objects in composable body | Allocations on every recomposition | `remember { ... }` for stable references |
-| Not providing keys to `LazyColumn` | Inefficient diffing, flickering | Always use `key = { it.id }` |
-| Nested `LazyColumn` | Conflicting scroll, performance | Single LazyColumn with sections |
-| Ignoring `padding` from Scaffold | Content behind top bar / bottom nav | Apply `Modifier.padding(padding)` |
-
-### Stable Types in Compose
-
-Compose skips recomposition of children with stable, unchanged parameters. A type is stable if:
-- It is a primitive type (`Int`, `String`, `Boolean`, etc.)
-- It is an enum
-- It is a data class with only stable fields (all `val`)
-- It is a `State<T>` or `MutableState<T>`
-- It is a function type (lambda)
-
-Mutable data classes (`var` fields) are NOT stable. Always use immutable data classes for UI models.
-
-```kotlin
-data class UserUiModel(    // Stable - all val
-    val id: String,
-    val name: String,
-    val avatarUrl: String
-)
-```
 
 ## Cross References
 

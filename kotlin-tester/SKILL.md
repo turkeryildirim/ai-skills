@@ -1,18 +1,18 @@
 ---
 name: kotlin-tester
-description: Kotlin testing patterns for Android — JUnit 4, Kotest, MockK, Coroutines Test, Turbine, Espresso, Compose Testing, and UIAutomator. Use when authoring, refactoring, or debugging tests. Triggers on "test", "MockK", "Espresso", "Compose test", "runTest", "Turbine", "Kotest", "coverage".
+description: Kotlin testing patterns for Android and KMP — JUnit 5, Kotest, MockK, Coroutines Test, Turbine, Espresso, Compose Testing, and UIAutomator. Use when authoring, refactoring, or debugging tests. Triggers on "test", "MockK", "Espresso", "Compose test", "runTest", "Turbine", "Kotest", "coverage".
 model: inherit
 ---
 
 # Kotlin Testing Best Practices
 
-Modern testing patterns for Android and Kotlin — JUnit 4, Kotest, MockK, Coroutines Test, Turbine, Espresso, Compose Testing, and UIAutomator. Focused on reliability, speed, and maintainability.
+Modern testing patterns for Android, Kotlin, and KMP — JUnit 5, Kotest, MockK, Coroutines Test, Turbine, Espresso, Compose Testing, and UIAutomator. Focused on reliability, speed, and maintainability.
 
 ## Specialized Agents
 
 | Agent | Role | Focus |
 |-------|------|-------|
-| **kotlin-tester-pro** | Test Expert | JUnit 4, Kotest, MockK, Coroutines, Espresso, Compose Testing, CI. |
+| **kotlin-tester-pro** | Test Expert | JUnit 5, Kotest, MockK, Coroutines, Espresso, Compose Testing, CI. |
 
 ## When to Use
 
@@ -23,6 +23,7 @@ Reference these guidelines when:
 - Writing UIAutomator tests for system UI and cross-app flows
 - Testing coroutines and Flow with `runTest` and Turbine
 - Property-based testing with Kotest
+- Testing shared code in KMP `commonTest`
 - Setting up code coverage with Kover
 - Configuring Gradle Managed Devices for CI
 - Following TDD (RED/GREEN/REFACTOR) workflow
@@ -30,8 +31,9 @@ Reference these guidelines when:
 
 ## Step 1: Check Test Surface and Framework
 
-- **Android projects:** JUnit 4 + MockK + Turbine + `runTest` for unit tests. Espresso or Compose Testing for UI.
-- **Kotlin/KMP server projects:** Kotest + MockK for unit tests. `testApplication` for Ktor.
+- **Android projects:** JUnit 5 (or 4) + MockK + Turbine + `runTest` for unit tests. Espresso or Compose Testing for UI.
+- **KMP projects:** `commonTest` with `kotlin.test` or Kotest. Platform-specific tests in `androidDeviceTest` / `iosTest`.
+- **Kotlin server projects:** Kotest + MockK for unit tests. `testApplication` for Ktor.
 - **Mixed projects:** Keep framework boundaries explicit. Do not mix JUnit and Kotest in the same file.
 
 ## Core Directives
@@ -44,7 +46,7 @@ Reference these guidelines when:
 - **Dispatchers:** Use `MainDispatcherRule` (set `UnconfinedTestDispatcher` on Main) for ViewModel tests.
 - **Flow:** Use Turbine's `.test {}` for Flow/StateFlow assertions.
 - **Mocking:** Use `coEvery`/`coVerify` for suspend functions. Use `mockk(relaxed = true)` only for logs/non-critical deps.
-- **Isolation:** Each test sets up its own SUT in `@Before`. No shared mutable state.
+- **Isolation:** Each test sets up its own SUT in `@Before` (or `beforeTest`). No shared mutable state.
 - **Behavior:** Test observable behavior, not implementation details.
 - **Coverage:** Target 80%+ general, 90%+ for public APIs, 100% for critical business logic.
 - **UI Tests:** Use `Modifier.testTag` in Compose, `withId()` in Espresso. Never rely on displayed text.
@@ -65,7 +67,7 @@ Reference these guidelines when:
 
 | # | Category | Impact | Load when… | Reference |
 |--:|----------|:------:|------------|-----------|
-| 1 | Unit Testing | CRITICAL | JUnit 4, ViewModel/UseCase/Repo tests, GIVEN/WHEN/THEN | [`references/unit-testing.md`](references/unit-testing.md) |
+| 1 | Unit Testing | CRITICAL | JUnit 5/4, ViewModel/UseCase/Repo tests, GIVEN/WHEN/THEN | [`references/unit-testing.md`](references/unit-testing.md) |
 | 2 | Kotest | HIGH | Kotest specs, matchers, BehaviorSpec, property testing | [`references/kotest.md`](references/kotest.md) |
 | 3 | Mocking | CRITICAL | MockK setup, stubbing, verification, capture, spy | [`references/mocking.md`](references/mocking.md) |
 | 4 | Flow Testing | CRITICAL | Turbine, StateFlow testing, Flow assertions | [`references/flow-testing.md`](references/flow-testing.md) |
@@ -80,7 +82,7 @@ Reference these guidelines when:
 ## Rule Index
 
 ### 1. Core Testing (`test-`) — CRITICAL
-`test-given-when-then` · `test-main-dispatcher-rule` · `test-no-sleep` · `test-no-shared-state` · `test-behavior-names` · `test-fresh-sut` · `test-no-mock-data-classes` · `test-no-private-testing` · `test-error-paths` · `test-tdd-red-first`
+`test-given-when-then` · `test-main-dispatcher-rule` · `test-no-sleep` · `test-no-shared-state` · `test-behavior-names` · `test-fresh-sut` · `test-no-mock-data-classes` · `test-no-private-testing` · `test-error-paths` · `test-tdd-red-first` · `test-junit5-android` · `test-mockk-constructor` · `test-kotest-assertions` · `test-kmp-common-test`
 
 ### 2. Coroutine Testing (`ctest-`) — CRITICAL
 `ctest-runtest-for-suspend` · `ctest-advance-until-idle` · `ctest-turbine-for-flow` · `ctest-fake-over-mock-flow` · `ctest-test-dispatcher`
@@ -99,6 +101,8 @@ Reference these guidelines when:
 - [ ] `runTest` used for suspend functions
 - [ ] `advanceUntilIdle()` called after async operations
 - [ ] Turbine used for Flow/StateFlow assertions
+- [ ] JUnit 5 used for new Android unit tests
+- [ ] Shared business logic tested in `commonTest` for KMP
 - [ ] No `Thread.sleep` in any test
 - [ ] Each test creates its own SUT in `@Before`
 - [ ] Error paths and edge cases covered
@@ -116,6 +120,7 @@ Reference these guidelines when:
 - [Kotlin Coroutines Test](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-test/)
 - [Turbine](https://github.com/cashapp/turbine)
 - [Kotest](https://kotest.io/)
+- [JUnit 5 Android Guide](https://github.com/mannodermaus/android-junit5)
 - [Espresso](https://developer.android.com/training/testing/espresso)
 - [Compose Testing](https://developer.android.com/develop/ui/compose/testing)
 - [UIAutomator](https://developer.android.com/training/testing/other-components/ui-automator)

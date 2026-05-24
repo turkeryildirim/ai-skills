@@ -54,6 +54,26 @@ Actionable directives for authoring and debugging tests in Kotlin.
 - **Rule:** Write the failing test first (RED), implement minimal code to pass (GREEN), then refactor. Never skip the RED phase.
 - **Avoid:** Writing implementation before tests.
 
+### `test-junit5-android`
+- **Context:** Android Testing.
+- **Rule:** Use JUnit 5 for Android unit tests when possible. Requires `android-junit5` plugin. Use `@Test` from `org.junit.jupiter.api`.
+- **Avoid:** JUnit 4 for new JVM-based unit tests if JUnit 5 is configured.
+
+### `test-mockk-constructor`
+- **Context:** Mocking.
+- **Rule:** Use `mockkConstructor(MyClass::class)` only when you cannot inject the dependency. Prefer constructor injection.
+- **Avoid:** Overusing constructor mocking as it indicates poor design.
+
+### `test-kotest-assertions`
+- **Context:** Assertions.
+- **Rule:** Use Kotest's `shouldBe`, `shouldThrow`, `shouldNotBeNull` for readable and idiomatic assertions.
+- **Avoid:** `assertEquals`, `assertTrue` from JUnit when using Kotest.
+
+### `test-kmp-common-test`
+- **Context:** Kotlin Multiplatform.
+- **Rule:** Put shared logic tests in `commonTest`. Use `kotlin.test` assertions for cross-platform compatibility.
+- **Avoid:** Platform-specific tests for pure business logic.
+
 ## 2. Coroutine Testing Rules (`ctest-`)
 
 ### `ctest-runtest-for-suspend`

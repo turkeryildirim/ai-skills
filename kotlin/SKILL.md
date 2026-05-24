@@ -25,7 +25,7 @@ Reference these guidelines when:
 - Designing clean architecture layers (domain, data, presentation)
 - Building UI with Jetpack Compose and Material Design 3
 - Configuring Gradle builds, version catalogs, or convention plugins
-- Implementing navigation with Coordinator pattern
+- Implementing navigation with Coordinator pattern or Type-safe Navigation
 - Setting up dependency injection with Hilt or Koin
 - Implementing persistence with Room or SQLDelight
 - Writing networking layer with Retrofit or Ktor
@@ -55,7 +55,7 @@ kotlinOptions { jvmTarget = "17" }
 | Sealed interfaces | Kotlin 1.5+ |
 | KSP (replace KAPT) | Kotlin 1.7+ |
 | Compose Material 3 | Compose BOM 2023+ |
-| NonCancellable cleanup | Coroutines 1.6+ |
+| Type-safe Navigation | Navigation 2.8.0+ |
 
 ## Step 2: Choose the Right Guidance Set
 
@@ -63,6 +63,7 @@ kotlinOptions { jvmTarget = "17" }
 - Load `references/coroutines.md` before changing async operations, Flow, or StateFlow.
 - Load `references/architecture.md` before structuring modules, UseCases, or Repositories.
 - Load `references/compose-ui.md` before building Compose screens or state management.
+- Load `references/kmp-multiplatform.md` before working on shared code in KMP projects.
 - Load `references/navigation-coordinator.md` before implementing app navigation flows.
 - Load `references/networking.md` before working with Retrofit or Ktor.
 - Load `references/persistence.md` before touching Room or SQLDelight.
@@ -79,8 +80,8 @@ kotlinOptions { jvmTarget = "17" }
 - **State:** Use `StateFlow` + `collectAsStateWithLifecycle()` for UI state. Single `UiState` data class per screen.
 - **Architecture:** Keep `domain` layer pure Kotlin. Map entities/DTOs to domain models. Extract business logic to UseCases.
 - **Compose:** Use `Modifier.testTag` for testing. `LaunchedEffect` for side effects. `remember` for state. `@Stable` for custom types.
-- **Navigation:** Use Coordinator pattern for flow logic. Navigate via lambdas, not from ViewModel.
-- **Networking:** Always validate HTTP status codes. Use protocol-based API clients for testability.
+- **Navigation:** Use Type-safe Navigation (Navigation 2.8.0+). Use Coordinator pattern for flow logic.
+- **Networking:** Always validate HTTP status codes. Use `kotlinx-serialization` for JSON.
 - **Security:** Never store tokens in SharedPreferences. Use EncryptedSharedPreferences or Keychain.
 - **Build:** Use Version Catalogs (`libs.versions.toml`). Prefer KSP over KAPT. Use Convention Plugins for multi-module.
 - **Error Handling:** Use `Result<T>` or sealed error types. Rethrow `CancellationException`. Use `require`/`check` for preconditions.
@@ -107,22 +108,23 @@ kotlinOptions { jvmTarget = "17" }
 | 2 | Coroutines | CRITICAL | Flow, StateFlow, SharedFlow, cancellation | [`references/coroutines.md`](references/coroutines.md) |
 | 3 | Architecture | CRITICAL | Modules, UseCases, Repositories, Clean Arch | [`references/architecture.md`](references/architecture.md) |
 | 4 | Compose UI | HIGH | Screens, state, theming, Material 3 | [`references/compose-ui.md`](references/compose-ui.md) |
-| 5 | Networking | HIGH | Retrofit, Ktor, error handling, retry | [`references/networking.md`](references/networking.md) |
-| 6 | Navigation | HIGH | Coordinator pattern, flow logic, deep links | [`references/navigation-coordinator.md`](references/navigation-coordinator.md) |
-| 7 | Dependency Injection | HIGH | Hilt, Koin, scoping, testability | [`references/dependency-injection.md`](references/dependency-injection.md) |
-| 8 | Build Configuration | HIGH | Gradle, Version Catalogs, flavors, optimization | [`references/build-configuration.md`](references/build-configuration.md) |
-| 9 | Convention Plugins | HIGH | Multi-module build logic, plugin creation | [`references/build-convention-plugins.md`](references/build-convention-plugins.md) |
-| 10 | Persistence | MEDIUM | Room, SQLDelight, mappers, migrations | [`references/persistence.md`](references/persistence.md) |
-| 11 | Material Design 3 | MEDIUM | M3 components, spacing, typography, accessibility | [`references/material-design.md`](references/material-design.md) |
-| 12 | Resources | MEDIUM | Naming, icons, reserved names, RTL | [`references/resources.md`](references/resources.md) |
-| 13 | Project Setup | MEDIUM | New project, required files, SDK config | [`references/project-setup.md`](references/project-setup.md) |
-| 14 | CI/CD | MEDIUM | GitHub Actions, GMD, coverage, pipelines | [`references/ci-cd.md`](references/ci-cd.md) |
-| 15 | Code Quality | MEDIUM | Detekt, Ktlint, static analysis, CI enforcement | [`references/code-quality.md`](references/code-quality.md) |
+| 5 | KMP | HIGH | Shared logic, expect/actual, multiplatform UI | [`references/kmp-multiplatform.md`](references/kmp-multiplatform.md) |
+| 6 | Networking | HIGH | Retrofit, Ktor, error handling, retry | [`references/networking.md`](references/networking.md) |
+| 7 | Navigation | HIGH | Type-safe Nav, Coordinator pattern, deep links | [`references/navigation-coordinator.md`](references/navigation-coordinator.md) |
+| 8 | Dependency Injection | HIGH | Hilt, Koin, scoping, testability | [`references/dependency-injection.md`](references/dependency-injection.md) |
+| 9 | Build Configuration | HIGH | Gradle, Version Catalogs, flavors, optimization | [`references/build-configuration.md`](references/build-configuration.md) |
+| 10 | Convention Plugins | HIGH | Multi-module build logic, plugin creation | [`references/build-convention-plugins.md`](references/build-convention-plugins.md) |
+| 11 | Persistence | MEDIUM | Room, SQLDelight, mappers, migrations | [`references/persistence.md`](references/persistence.md) |
+| 12 | Material Design 3 | MEDIUM | M3 components, spacing, typography, accessibility | [`references/material-design.md`](references/material-design.md) |
+| 13 | Resources | MEDIUM | Naming, icons, reserved names, RTL | [`references/resources.md`](references/resources.md) |
+| 14 | Project Setup | MEDIUM | New project, required files, SDK config | [`references/project-setup.md`](references/project-setup.md) |
+| 15 | CI/CD | MEDIUM | GitHub Actions, GMD, coverage, pipelines | [`references/ci-cd.md`](references/ci-cd.md) |
+| 16 | Code Quality | MEDIUM | Detekt, Ktlint, static analysis, CI enforcement | [`references/code-quality.md`](references/code-quality.md) |
 
 ## Rule Index
 
 ### 1. Kotlin Patterns (`kt-`) — CRITICAL
-`kt-no-force-unwrap` · `kt-immutable-data-class` · `kt-sealed-interface` · `kt-default-params` · `kt-no-exception-control-flow` · `kt-sequences-large-collections` · `kt-no-mutable-public` · `kt-value-classes` · `kt-naming-conventions` · `kt-server-response-nullable` · `kt-no-lateinit-unsafe` · `kt-lambda-return-label` · `kt-lifecycle-paired-observer` · `kt-no-nested-scope-functions` · `kt-handle-java-platform-types` · `kt-value-class-validation` · `kt-logging-levels`
+`kt-no-force-unwrap` · `kt-immutable-data-class` · `kt-sealed-interface` · `kt-default-params` · `kt-no-exception-control-flow` · `kt-sequences-large-collections` · `kt-no-mutable-public` · `kt-value-classes` · `kt-naming-conventions` · `kt-server-response-nullable` · `kt-no-lateinit-unsafe` · `kt-lambda-return-label` · `kt-lifecycle-paired-observer` · `kt-no-nested-scope-functions` · `kt-handle-java-platform-types` · `kt-value-class-validation` · `kt-logging-levels` · `kt-type-safe-navigation` · `kt-serialization-json` · `kt-kmp-expect-actual` · `kt-composable-preview-parameter` · `kt-opt-in-annotations`
 
 ### 2. Coroutines (`coro-`) — CRITICAL
 `coro-no-globalscope` · `coro-inject-dispatchers` · `coro-supervisor-job` · `coro-no-cancel-swallow` · `coro-no-runblocking` · `coro-lifecycle-collection` · `coro-single-uistate` · `coro-cooperative-cancellation` · `coro-callback-flow-cleanup` · `coro-no-mutable-in-stateflow` · `coro-no-flow-on-main`
@@ -159,6 +161,9 @@ kotlinOptions { jvmTarget = "17" }
 - [ ] `CancellationException` always rethrown
 - [ ] Single `UiState` data class per screen
 - [ ] `collectAsStateWithLifecycle()` used in Compose
+- [ ] Type-safe Navigation used for Compose routing
+- [ ] `kotlinx-serialization` used for JSON processing
+- [ ] `PreviewParameterProvider` used for Composable previews
 - [ ] Domain layer contains no Android framework imports
 - [ ] DB entities/DTOs mapped to domain models before reaching UI
 - [ ] Business logic in UseCases, not ViewModels
@@ -169,7 +174,7 @@ kotlinOptions { jvmTarget = "17" }
 - [ ] `Modifier.testTag` on interactive Compose elements
 - [ ] Material Design 3 spacing grid (8dp) and touch targets (48dp)
 - [ ] Version catalog used (no hardcoded versions in build scripts)
-- [ ] Coordinator pattern used for navigation flow logic
+- [ ] Coordinator pattern used for complex navigation flow logic
 
 ## External References
 
