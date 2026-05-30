@@ -67,7 +67,7 @@ sqlite3 --version
 |--:|----------|:------:|------------|-----------|
 | 1 | Optimization | CRITICAL | Fixing slow queries, analyzing EXPLAIN plans | [`references/query-optimization.md`](references/query-optimization.md) |
 | 2 | Best Practices | CRITICAL | Designing schemas, naming conventions, security | [`references/best-practices.md`](references/best-practices.md) |
-| 3 | Indexing Strategy | CRITICAL | Creating indexes, composite index design | [`references/indexes-performance.md`](references/indexes-performance.md) |
+| 3 | Indexing Strategy | CRITICAL | Creating indexes, composite index design, JSON column indexing | [`references/indexes-performance.md`](references/indexes-performance.md) |
 | 4 | Advanced Patterns | HIGH | Using CTEs, Window Functions, JSON operations | [`references/advanced-patterns.md`](references/advanced-patterns.md) |
 | 5 | Common Pitfalls | MEDIUM | Debugging common SQL errors or anti-patterns | [`references/common-pitfalls.md`](references/common-pitfalls.md) |
 
@@ -75,7 +75,7 @@ sqlite3 --version
 
 - **[R1] Query Optimization**: EXPLAIN, Indexed columns, SELECT *, EXISTS vs COUNT
 - **[R2] Schema Design**: Normalization, Data types, Timestamps, Constraints
-- **[R3] Indexing Strategy**: FK indexing, Composite indexes, Leftmost prefix
+- **[R3] Indexing Strategy**: FK indexing, Composite indexes, Leftmost prefix, JSON column indexing
 - **[R4] Security & Transactions**: Prepared statements, Atomic modifications, Zero-downtime migrations
 
 ## Validation Checklist

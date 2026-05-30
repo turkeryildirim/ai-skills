@@ -72,12 +72,14 @@ export class Product { /* Only what Product needs */ }
 | 2 | Clean Code Patterns | CRITICAL | Writing daily code, choosing between simplicity and abstraction | [`references/clean-code-principles.md`](references/clean-code-principles.md) | 4 |
 | 3 | Function Design | HIGH | Designing methods, organizing logic, reducing complexity | [`references/function-design.md`](references/function-design.md) | 4 |
 | 4 | Anti-Patterns | MEDIUM | Identifying common design mistakes and refactoring code | [`references/anti-patterns-and-examples.md`](references/anti-patterns-and-examples.md) | - |
+| 5 | Pragmatic Software Design | HIGH | Enhancing readability, input safety, early returns, and cognitive simplicity | [`references/pragmatic-software-design.md`](references/pragmatic-software-design.md) | 5 |
 
 ## Rule Index
 
 - **SOLID (OOP Design)**: SRP, OCP, LSP, ISP, DIP
 - **Clean Code**: KISS, YAGNI, DRY, TDA
 - **Function Design**: Small size, Meaningful names, Single level of abstraction, Early returns
+- **Pragmatic Design**: Guard clauses (Fail-fast), No exceptions for control flow, No flag arguments, Explaining variables, DOP vs OOP boundaries
 
 ## Validation Checklist
 
@@ -90,6 +92,10 @@ export class Product { /* Only what Product needs */ }
 - [ ] Behavior lives with the data (TDA)
 - [ ] Dependencies point toward abstractions, not concretions (DIP)
 - [ ] Complexity is justified by the requirements, not "dogma"
+- [ ] Guard clauses are used to validate inputs immediately and fail-fast
+- [ ] Exceptions are not used for normal business control flow
+- [ ] Methods do not use boolean flag parameters to steer execution paths
+- [ ] Complex conditionals are broken down into well-named explaining variables
 
 ## External References
 

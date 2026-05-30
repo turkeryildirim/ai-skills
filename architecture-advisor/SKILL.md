@@ -23,6 +23,7 @@ Language-specific analysis personas. Always load the persona that matches the de
 | **arch-swift-pro** | Swift, UIKit, mixed UIKit+SwiftUI, iOS/macOS | `Package.swift`, `.xcodeproj`, `.xcworkspace`, `UIViewController` subclasses dominant |
 | **arch-swiftui-pro** | SwiftUI-first, Swift 5.9+, SwiftData, iOS 16+ | `*App.swift` with `@main`, `struct * : View` dominant, `@Observable`, `NavigationStack` |
 | **arch-golang-pro** | Go, Gin, Chi, Echo, gRPC, CLI tools | `go.mod`, `main.go`, `cmd/` directory, `*.go` files |
+| **arch-kotlin-pro** | Kotlin, Android, KMP, Backend (Ktor/Spring) | `build.gradle`, `build.gradle.kts`, `settings.gradle.kts` |
 
 ## When to Use
 
@@ -76,6 +77,7 @@ Language-specific analysis personas. Always load the persona that matches the de
 | 7 | Swift Architecture | HIGH | Stack detected as Swift/UIKit (mixed or UIKit-dominant) | [`references/swift-architecture-guide.md`](references/swift-architecture-guide.md) | `swift-` | 3 |
 | 8 | SwiftUI Architecture | HIGH | Stack detected as SwiftUI-first (Swift 5.9+, iOS 16+) | [`references/swiftui-architecture-guide.md`](references/swiftui-architecture-guide.md) | `swiftui-` | 3 |
 | 9 | Go Architecture | HIGH | Stack detected as Go/Golang | [`references/golang-architecture-guide.md`](references/golang-architecture-guide.md) | `golang-` | 3 |
+| 10 | Kotlin Architecture | HIGH | Stack detected as Kotlin/Android/KMP/Backend | [`references/kotlin-architecture-guide.md`](references/kotlin-architecture-guide.md) | `kotlin-` | 3 |
 
 ## Rule Index
 
@@ -103,6 +105,9 @@ Language-specific analysis personas. Always load the persona that matches the de
 ### Go Analysis (`golang-`)
 `golang-project-structure` · `golang-concurrency-patterns` · `golang-dependency-management`
 
+### Kotlin Analysis (`kotlin-`)
+`kotlin-project-structure` · `kotlin-coroutine-patterns` · `kotlin-framework-patterns`
+
 ## Validation Checklist
 
 - [ ] Project scan completed (config files + directory tree read)
@@ -126,3 +131,6 @@ Language-specific analysis personas. Always load the persona that matches the de
 - [Effective Go](https://go.dev/doc/effective_go)
 - [SwiftUI Documentation — Apple Developer](https://developer.apple.com/documentation/swiftui)
 - [The Composable Architecture](https://github.com/pointfreeco/swift-composable-architecture)
+- [Kotlin Multiplatform Documentation](https://kotlinlang.org/docs/multiplatform.html)
+- [Android Developers Architecture Guide](https://developer.android.com/topic/architecture)
+- [Kotlin Coroutines Guide](https://kotlinlang.org/docs/coroutines-overview.html)
